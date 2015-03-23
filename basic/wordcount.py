@@ -57,6 +57,7 @@ def readfile(filename):
                 worddict[word] += 1
             else:
                 worddict[word] = 1
+    ofile.close()
     return worddict
 
 def print_words(filename):

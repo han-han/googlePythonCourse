@@ -8,6 +8,7 @@
 
 import sys
 import re
+import urllib
 
 """Baby Names exercise
 
@@ -34,6 +35,8 @@ Suggested milestones for incremental development:
  -Fix main() to use the extract_names list
 """
 
+
+
 def extract_names(filename):
   """
   Given a file name for baby.html, returns a list starting with the year string
@@ -41,8 +44,37 @@ def extract_names(filename):
   ['2006', 'Aaliyah 91', Aaron 57', 'Abagail 895', ' ...]
   """
   # +++your code here+++
-  return
-
+  # page = urllib.urlopen(filename).read()
+  ofile = open(filename, 'rU')
+  page = ofile.read()
+  ofile.close()
+  result = []
+  
+  # matchyear = re.search(r'Popularity in \w\w\w\w', page)
+  match_year = re.search(r'Popularity\sin\s(\d\d\d\d)', page)
+  if not match_year:
+    sys.stderr.write('Couldn\'t find the year!\n')
+    sys.exit(1)
+  year = match_year.group(1)
+  
+  records = re.findall(r'<td>(\d+)</td><td>(\w+)</td><td>(\w+)</td>', page) 
+  for record in records:
+    result.append(record[1] + ' ' + record[0])  
+    result.append(record[2] + ' ' + record[0])
+  result.sort() 
+  result.insert(0, year)
+      
+  #if matchyear:                      
+  #  print 'find year: ' + matchyear.group()[-4:]
+  #  records = re.findall(r'(<td>)(\d+)(</td><td>)(\w+)(</td><td>)(\w+)(</td>)', page) 
+  #  for record in records:
+  #    result.append(record[3] + ' ' + record[1])  
+  #    result.append(record[5] + ' ' + record[1])
+  #  result.sort() 
+  #  result.insert(0, matchyear.group()[-4:])
+  # else:
+  #  print 'did not find year'
+  return result
 
 def main():
   # This command-line parsing code is provided.
@@ -63,6 +95,17 @@ def main():
   # +++your code here+++
   # For each filename, get the names, then either print the text output
   # or write it to a summary file
-  
+  for filename in args:
+    mylist = extract_names(filename)
+    if not summary:
+      text = '\n'.join(mylist) + '\n'
+      print text
+    else:
+      print 'try summary of ' + filename
+      with open(filename + '.summary', "wb") as sumfile:
+        for item in mylist:
+          sumfile.write("%s\n" % item)
+        sumfile.close()
+    
 if __name__ == '__main__':
   main()
