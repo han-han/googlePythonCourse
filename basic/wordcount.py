@@ -45,6 +45,28 @@ import sys
 # and builds and returns a word/count dict for it.
 # Then print_words() and print_top() can just call the utility function.
 
+def readfile(filename):
+    worddict = {}
+    ofile = open(filename)
+    for line in ofile:
+        fline = filter(lambda x: x.isalpha() or x == ' ', line)
+        words = fline.split(' ')
+        for word in words:
+            word = word.lower()
+            if word in worddict.keys():
+                worddict[word] += 1
+            else:
+                worddict[word] = 1
+    return worddict
+
+def print_words(filename):
+    print readfile(filename)
+
+def print_top(filename):
+    wd = readfile(filename)
+    for w in sorted(wd, key=wd.get, reverse=True)[:20]:
+        print w, wd[w]
+
 ###
 
 # This basic command line argument parsing code is provided and
