@@ -77,14 +77,12 @@ def download_images(img_urls, dest_dir):
   index = file(os.path.join(dest_dir, 'index.html'), 'w')
   index.write('<html><body>\n')
 
-  i = 0
-  for img_url in img_urls:
+  for i, img_url in enumerate(img_urls):
     local_name = 'img%d' % i
     print 'Retrieving...', img_url
     urllib.urlretrieve(img_url, os.path.join(dest_dir, local_name))
 
     index.write('<img src="%s">' % (local_name,))
-    i += 1
 
   index.write('\n</body></html>\n')
   index.close()
