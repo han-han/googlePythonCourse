@@ -17,8 +17,26 @@ import commands
 
 # +++your code here+++
 # Write functions and modify main() to call them
+def get_special_dir(dir):
+  filenames = os.listdir(dir)
+  spnamelist = []
+  for filename in filenames:
+      spname = re.search(r'\w+_\w+_[\w._]+', filename)
+      if spname: 
+         spnamelist.append(os.path.abspath(os.path.join(dir, spname.group())))
+  return spnamelist
+  
+def copy_to(paths, dir):
+  for file in paths:
+    shutil.copy(file, dir)
 
-
+def zip_to(paths, zippath):
+  cmd = 'zip -j' + ' ' + zippath + ' ' + ' '.join(paths)   
+  print "Command to run: ", cmd
+  (status, output) = commands.getstatusoutput(cmd)
+  if status:
+    sys.stderr.write(output)
+    sys.exit(1)
 
 def main():
   # This basic command line argument parsing code is provided.
@@ -47,6 +65,15 @@ def main():
   if len(args) == 0:
     print "error: must specify one or more dirs"
     sys.exit(1)
+    
+  for dirname in args:
+      spnames = get_special_dir(dirname)
+      if tozip == '' and todir == '': 
+        print spnames
+      elif todir <> '':
+        copy_to(spnames, todir) 
+      elif tozip <> '':
+        zip_to(spnames, tozip)  
 
   # +++your code here+++
   # Call your functions
