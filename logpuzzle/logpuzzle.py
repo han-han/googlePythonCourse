@@ -43,7 +43,7 @@ def read_urls(filename):
         url_dict['http://' + host + url] = 1
       else:
         url_dict[url] += 1
-  return sorted(url_dict)
+  return sorted(url_dict.keys(), key = url_sort_key)
          
 def download_images(img_urls, dest_dir):
   """Given the urls already in the correct order, downloads
